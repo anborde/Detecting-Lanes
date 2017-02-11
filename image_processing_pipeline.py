@@ -1,17 +1,14 @@
 from helper_functions import *
 
-def process_image(img):
 
-    # Getting size metrics of the image
-    imshape = img.shape
-
+def process_image(img, vertices):
     # Step 1: Detecting Edges using Canny Edge Detection
     grayImg = grayscale(img)
 
     cannyImg = canny(grayImg, 50, 150)
 
     # Step 2: Identifying region on interest i.e. the region where the lanes are situated
-    vertices = np.array([[(450, 320), (525, 320), (900, imshape[0]), (150, imshape[0])]], dtype=np.int32)
+    vertices = np.array(vertices, dtype=np.int32)
 
     cannyImg = region_of_interest(cannyImg, vertices)
 

@@ -4,7 +4,7 @@ import cv2
 
 
 # Function used to process an individual image part of a video
-def process_image(image):
+def process_image(image, vertices):
     # Getting size metrics of the image
     imshape = image.shape
 
@@ -15,11 +15,8 @@ def process_image(image):
 
     cannyImg = canny(grayImg, 50, 150)
 
-    # Step 2: Identifying region on interest
-    vertices = np.array([[(450, 320),(525, 320), (900, imshape[0]), (150,imshape[0])]], dtype=np.int32)
-
+    # Step 2: Extracting Region of Interest
     cannyImg = region_of_interest(cannyImg, vertices)
-
 
     # Step 3: Identifying edges representing lines using Hough Transform
     rho = 1
@@ -36,11 +33,18 @@ def process_image(image):
 
 
 # Function used to find Lanes in videos
-def findLanes(input_file, output_file):
+def findLanes(input_file, output_file, vertices):
     clip1 = VideoFileClip(input_file)
 
     # Processing input
-    clip = clip1.fl_image(process_image)
+    clip = clip1.fl_image(process_image, vertices)
 
     # Writing output video
     clip.write_videofile(output_file, audio=False)
+
+# Function to get Video Size
+def getVideoSize(input_file):
+    clip = VideoFileClip(input_file)
+
+    # Returning size
+    return clip.size
